@@ -1,0 +1,88 @@
+version: '3'
+services:
+  namenode:
+    image: hadoop:namenode
+    container_name: namenode
+    volumes:
+    #   - namenode_data:/hadoop/dfs/name
+      - ./data:/data
+    environment:
+      - CLUSTER_NAME=test
+    ports:
+      - "9870:9870"
+    networks:
+      - hadoop_network
+    # command: hdfs dfs -put /data/data.csv /data.csv
+# Put data from mount point to hdfs: hdfs dfs -put /k-means.csv /k-means.csv
+
+  datanode:
+    image: hadoop:datanode
+    # volumes:
+    #   - datanode1_data:/hadoop/dfs/data
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870
+    depends_on:
+      - namenode
+    networks:
+      - hadoop_network
+
+  # spark:
+  #   image: spark:python3
+  #   container_name: sparkendpoint
+  #   networks:
+  #     - hadoop_network
+  spark-master:
+    image: bitnami/spark:latest
+    container_name: spark-master
+    ports:
+      - "8080:8080" # Spark master web UI
+      - "7077:7077" # Spark master listening port
+    volumes:
+      - ./app:/opt/spark-apps
+      - ./hdfs-namenode:/opt/hadoop/conf
+    environment:
+      - SPARK_MODE=master
+      - SPARK_EXTRA_CLASSPATH=/opt/hadoop/conf
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+    networks:
+      - hadoop_network
+
+  spark-worker:
+    image: bitnami/spark:latest
+    depends_on:
+      - spark-master
+    volumes:
+      # - ./app:/opt/spark-apps
+      - ./hdfs-namenode:/opt/hadoop/conf
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_EXTRA_CLASSPATH=/opt/hadoop/conf
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_MEMORY=1G
+      - SPARK_WORKER_CORES=1
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+    networks:
+      - hadoop_network
+    # mem_limit: 500m
+
+# bin/spark-submit --conf spark.executor.memory=500m --master spark://spark-master:7077 /opt/spark-apps/k-means.py
+
+# bin/spark-submit --master spark://spark-master:7077 /opt/spark-apps/k-means.py
+
+# volumes:
+#   namenode_data:
+#   datanode1_data:
+#   datanode2_data:
+
+networks:
+  hadoop_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.20.0.0/16"
