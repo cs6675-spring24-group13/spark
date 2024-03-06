@@ -1,0 +1,11 @@
+order_id,user_id,order_number,order_dow,order_hour_of_day,days_since_prior_order,product_id,add_to_cart_order,reordered,department_id,department,product_name
+2425083,49125,1,2,18,,17,1,0,13,pantry,baking ingredients
+2425083,49125,1,2,18,,91,2,0,16,dairy eggs,soy lactosefree
+2425083,49125,1,2,18,,36,3,0,16,dairy eggs,butter
+2425083,49125,1,2,18,,83,4,0,4,produce,fresh vegetables
+2425083,49125,1,2,18,,83,5,0,4,produce,fresh vegetables
+2425083,49125,1,2,18,,91,6,0,16,dairy eggs,soy lactosefree
+2425083,49125,1,2,18,,120,7,0,16,dairy eggs,yogurt
+2425083,49125,1,2,18,,59,8,0,15,canned goods,canned meals beans
+2425083,49125,1,2,18,,35,9,0,12,meat seafood,poultry counter
+1944304,162867,1,3,17,,37,1,0,1,frozen,ice cream ice
