@@ -1,7 +1,7 @@
 from pyspark.sql import SparkSession
 from pyspark.ml.clustering import KMeans
 from pyspark.ml.feature import VectorAssembler
-from pyspark.sql.functions import col
+import matplotlib.pyplot as plt
 
 # Initialize a Spark session
 spark = SparkSession.builder \
@@ -10,32 +10,47 @@ spark = SparkSession.builder \
     .getOrCreate()
 
 # Load the dataset
-data = spark.read.csv('hdfs://namenode:9000/data.csv', header=True, inferSchema=True)
+df = spark.read.csv('hdfs://namenode:9000/data.csv', header=True, inferSchema=True)
 
-# Fill in missing values if necessary
-avg_days = data.agg({'days_since_prior_order': 'avg'}).first()[0]
-data = data.fillna({'days_since_prior_order': avg_days})
+# Define the columns to be used as features
+columns = ["feature1", "feature2", "feature3"]  # Replace with your actual column names
 
-# Select features for clustering and assemble them into a feature vector
-feature_columns = ['order_dow', 'order_hour_of_day', 'days_since_prior_order']
-assembler = VectorAssembler(inputCols=feature_columns, outputCol='features', handleInvalid='skip')
-data = assembler.transform(data)
+# Combine features into a single vector column
+vec_assembler = VectorAssembler(inputCols=columns, outputCol="features")
+df_vector = vec_assembler.transform(df)
 
-# Train a KMeans model
-kmeans = KMeans().setK(3).setSeed(1)
-model = kmeans.fit(data)
+# Apply K-means clustering
+kmeans = KMeans(featuresCol="features", k=3)  # Set k=3 clusters
+model = kmeans.fit(df_vector)
 
 # Make predictions
-predictions = model.transform(data)
+predictions = model.transform(df_vector)
 
-# Define the output path on HDFS
-output_path = "./result"
+# Show results
+predictions.select("features", "prediction").show()
 
-# Save the predictions to HDFS in parquet format
-predictions_without_features = predictions.drop('features')
+# Collect data to a Pandas DataFrame for visualization
+pandas_df = predictions.select("features", "prediction").toPandas()
 
-# Save the modified DataFrame to a CSV file in HDFS
-predictions_without_features.write.csv(output_path, header=True, mode='overwrite')
+# Extract individual features from the 'features' column for plotting
+pandas_df["feature1"] = pandas_df["features"].apply(lambda x: x[0])
+pandas_df["feature2"] = pandas_df["features"].apply(lambda x: x[1])
+pandas_df["feature3"] = pandas_df["features"].apply(lambda x: x[2])
+
+# Plot the data
+plt.figure(figsize=(10, 6))
+for cluster in range(3):  # Assuming k=3 clusters
+    clustered_data = pandas_df[pandas_df["prediction"] == cluster]
+    plt.scatter(clustered_data["feature1"], clustered_data["feature2"], label=f"Cluster {cluster}")
+
+plt.xlabel("Feature 1")
+plt.ylabel("Feature 2")
+plt.legend()
+plt.title("K-means Clustering Results")
+
+# Save the plot locally
+plot_filename = "kmeans_clusters.png"
+plt.savefig(plot_filename)
 
 # Stop the Spark session
 spark.stop()

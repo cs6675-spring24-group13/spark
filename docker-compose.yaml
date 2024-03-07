@@ -10,6 +10,9 @@ services:
       - CLUSTER_NAME=test
     ports:
       - "9870:9870"
+      - "50070:50070"
+      - "9000:9000"
+      - "9864:9864"
     networks:
       - hadoop_network
     # command: hdfs dfs -put /data/data.csv /data.csv
