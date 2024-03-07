@@ -30,3 +30,28 @@ For docker network, i have not find a good way to view file on host locally, bec
 curl -L "http://localhost:9870/webhdfs/v1/kmeans_clusters.png?op=OPEN" -o kmeans_clusters.png
 
 And open the file in VSC
+
+
+### Connect to Kafka
+
+- run above docker compose to start spark
+
+- git clone realtime-data-analysis repo
+
+```
+git clone https://github.com/cs6675-spring24-group13/realtime-data-analysis.git
+```
+
+- run docker compose at above repo's root dir
+
+```
+docker compose up -d
+```
+
+
+- in spark master, run program below. kafka-connect.py is a sample program that basically stdout the kafka's event only
+
+```
+bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1 --master spark://spark-master:7077 /opt/spark-apps/kafka-connect.py
+```
+
