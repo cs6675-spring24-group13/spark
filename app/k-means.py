@@ -13,7 +13,7 @@ spark = SparkSession.builder \
 df = spark.read.csv('hdfs://namenode:9000/data.csv', header=True, inferSchema=True)
 
 # Define the columns to be used as features
-columns = ["feature1", "feature2", "feature3"]  # Replace with your actual column names
+columns = ["feature1", "feature2"]
 
 # Combine features into a single vector column
 vec_assembler = VectorAssembler(inputCols=columns, outputCol="features")
@@ -35,7 +35,6 @@ pandas_df = predictions.select("features", "prediction").toPandas()
 # Extract individual features from the 'features' column for plotting
 pandas_df["feature1"] = pandas_df["features"].apply(lambda x: x[0])
 pandas_df["feature2"] = pandas_df["features"].apply(lambda x: x[1])
-pandas_df["feature3"] = pandas_df["features"].apply(lambda x: x[2])
 
 # Plot the data
 plt.figure(figsize=(10, 6))

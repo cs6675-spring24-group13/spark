@@ -1,7 +1,7 @@
 version: '3'
 services:
   namenode:
-    image: hadoop:namenode
+    image: testaccount007/hadoop:namenode
     container_name: namenode
     volumes:
     #   - namenode_data:/hadoop/dfs/name
@@ -19,7 +19,7 @@ services:
 # Put data from mount point to hdfs: hdfs dfs -put /k-means.csv /k-means.csv
 
   datanode:
-    image: hadoop:datanode
+    image: testaccount007/hadoop:datanode
     # volumes:
     #   - datanode1_data:/hadoop/dfs/data
     environment:
