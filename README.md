@@ -55,3 +55,23 @@ docker compose up -d
 bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1 --master spark://spark-master:7077 /opt/spark-apps/kafka-connect.py
 ```
 
+- sample kafka event data (every line is a new event)
+
+```
+{"exchange":"HITBTC","symbol":"XLM-USDT","bid":0.11924,"ask":0.119283,"timestamp":1709146868.173,"receipt_timestamp":1709146868.180787}
+{"exchange":"HITBTC","symbol":"XLM-USDT","bid":0.11924,"ask":0.119288,"timestamp":1709146868.373,"receipt_timestamp":1709146868.397893}
+{"exchange":"HITBTC","symbol":"XLM-USDT","bid":0.119247,"ask":0.119288,"timestamp":1709146868.574,"receipt_timestamp":1709146868.5954921}
+{"exchange":"HITBTC","symbol":"XLM-USDT","bid":0.119247,"ask":0.119283,"timestamp":1709146868.974,"receipt_timestamp":1709146869.012954}
+{"exchange":"HITBTC","symbol":"XLM-USDT","bid":0.119247,"ask":0.119288,"timestamp":1709146869.374,"receipt_timestamp":1709146869.4037209}
+{"exchange":"HITBTC","symbol":"XLM-USDT","bid":0.119247,"ask":0.119283,"timestamp":1709146869.975,"receipt_timestamp":1709146870.0044413}
+{"exchange":"HITBTC","symbol":"XLM-USDT","bid":0.119247,"ask":0.119288,"timestamp":1709146870.376,"receipt_timestamp":1709146870.409218}
+{"exchange":"HITBTC","symbol":"XLM-USDT","bid":0.119247,"ask":0.119288,"timestamp":1709146870.676,"receipt_timestamp":1709146870.872053}
+{"exchange":"HITBTC","symbol":"XLM-USDT","bid":0.119247,"ask":0.119283,"timestamp":1709146870.776,"receipt_timestamp":1709146870.87225}
+{"exchange":"HITBTC","symbol":"XLM-USDT","bid":0.119247,"ask":0.119288,"timestamp":1709146871.077,"receipt_timestamp":1709146871.4190223}
+{"exchange":"HITBTC","symbol":"XLM-USDT","bid":0.119252,"ask":0.119288,"timestamp":1709146872.078,"receipt_timestamp":1709146872.2285795}
+{"exchange":"HITBTC","symbol":"XLM-USDT","bid":0.119288,"ask":0.119306,"timestamp":1709146872.579,"receipt_timestamp":1709146872.6436334}
+{"exchange":"HITBTC","symbol":"XLM-USDT","bid":0.119291,"ask":0.119306,"timestamp":1709146872.779,"receipt_timestamp":1709146872.78021}
+{"exchange":"HITBTC","symbol":"XLM-USDT","bid":0.119295,"ask":0.119347,"timestamp":1709146873.58,"receipt_timestamp":1709146873.587899}
+{"exchange":"HITBTC","symbol":"XLM-USDT","bid":0.119312,"ask":0.119347,"timestamp":1709146873.881,"receipt_timestamp":1709146874.0210495}
+```
+
