@@ -6,11 +6,12 @@ spark = SparkSession \
     .getOrCreate()
 
 # Create DataFrame representing the stream of input lines from Kafka
+# available topic: ticker-BEQUANT, ticker-HITBTC
 df = spark \
   .readStream \
   .format("kafka") \
   .option("kafka.bootstrap.servers", "kafka:9092") \
-  .option("subscribe", "ticker-HITBTC-XLM-USDT") \
+  .option("subscribe", "ticker-BEQUANT") \
   .load()
 
 df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
