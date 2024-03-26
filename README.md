@@ -75,3 +75,9 @@ bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1 --m
 {"exchange":"HITBTC","symbol":"XLM-USDT","bid":0.119312,"ask":0.119347,"timestamp":1709146873.881,"receipt_timestamp":1709146874.0210495}
 ```
 
+### Run with metrics exposed (Optional)
+
+bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1 \
+--master spark://spark-master:7077 /opt/spark-apps/kafka-connect.py \
+--conf spark.ui.prometheus.enabled=true \
+--conf spark.executor.processTreeMetrics.enabled=true

@@ -40,9 +40,11 @@ services:
     ports:
       - "8080:8080" # Spark master web UI
       - "7077:7077" # Spark master listening port
+      - "4040:4040" # Spark executor web UI
     volumes:
       - ./app:/opt/spark-apps
       - ./hdfs-namenode:/opt/hadoop/conf
+      - ./spark-conf:/opt/bitnami/spark/conf
     environment:
       - SPARK_MODE=master
       - SPARK_EXTRA_CLASSPATH=/opt/hadoop/conf
@@ -57,9 +59,13 @@ services:
     image: bitnami/spark:latest
     depends_on:
       - spark-master
+    container_name: spark-worker
     volumes:
       # - ./app:/opt/spark-apps
       - ./hdfs-namenode:/opt/hadoop/conf
+      - ./spark-conf:/opt/bitnami/spark/conf
+    # ports:
+    #   - "8081:8081" # Spark worker web UI
     environment:
       - SPARK_MODE=worker
       - SPARK_EXTRA_CLASSPATH=/opt/hadoop/conf
