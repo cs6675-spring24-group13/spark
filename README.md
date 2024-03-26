@@ -81,3 +81,9 @@ bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1 \
 --master spark://spark-master:7077 /opt/spark-apps/kafka-connect.py \
 --conf spark.ui.prometheus.enabled=true \
 --conf spark.executor.processTreeMetrics.enabled=true
+
+You can access the prometheus metrics datapoint at 
+
+- [Spark Master](http://localhost:8080/metrics/master/prometheus/)
+- [Spark Worker](http://localhost:8081/metrics/prometheus/)
+- [Spark Exector](http://localhost:4040/metrics/prometheus/)
