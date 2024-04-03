@@ -134,6 +134,9 @@ bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.1 \
 
 ![Metrics](image/screencapture-localhost-4040-StreamingQuery-statistics-2024-04-03-06_54_32.png)
 
+- sample metrics graph (with 10 times amplifier)
+
+![Metrics](image/screencapture-localhost-4040-StreamingQuery-statistics-2024-04-03-12_29_21.png)
 
 ### Run with sample trading strategy based on ave
 
