@@ -45,6 +45,7 @@ services:
       - ./app:/opt/spark-apps
       - ./hdfs-namenode:/opt/hadoop/conf
       - ./spark-conf:/opt/bitnami/spark/conf
+      - ./data/spark-outputs:/opt/spark-outputs
     environment:
       - SPARK_MODE=master
       - SPARK_EXTRA_CLASSPATH=/opt/hadoop/conf
@@ -64,6 +65,7 @@ services:
       # - ./app:/opt/spark-apps
       - ./hdfs-namenode:/opt/hadoop/conf
       - ./spark-conf:/opt/bitnami/spark/conf
+      - ./data/spark-outputs:/opt/spark-outputs
     # ports:
     #   - "8081:8081" # Spark worker web UI
     environment:
