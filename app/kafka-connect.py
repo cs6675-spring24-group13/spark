@@ -4,6 +4,7 @@ spark = SparkSession \
     .builder \
     .appName("KafkaSparkIntegration") \
     .getOrCreate()
+spark.conf.set("spark.sql.streaming.metricsEnabled", "true")
 
 # Create DataFrame representing the stream of input lines from Kafka
 # available topic: ticker-BEQUANT, ticker-HITBTC
