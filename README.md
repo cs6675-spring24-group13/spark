@@ -1,11 +1,19 @@
 Prepare for docker compose-------To build images for hdfs
 
-In root dir: docker build -t hadoop:base .
+In root dir: 
+```
+docker build -t hadoop:base .
+```
 
-In hdfs-namenode: docker build -t hadoop:namenode .
+In hdfs-namenode: 
+```
+docker build -t hadoop:namenode .
+```
 
-In hdfs-datanode: docker build -t hadoop:datanode .
-
+In hdfs-datanode: 
+```
+docker build -t hadoop:datanode .
+```
 
 Run the docker compose:
 
