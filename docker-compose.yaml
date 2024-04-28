@@ -60,7 +60,7 @@ services:
     image: bitnami/spark:latest
     depends_on:
       - spark-master
-    container_name: spark-worker
+    #container_name: spark-worker
     volumes:
       # - ./app:/opt/spark-apps
       - ./hdfs-namenode:/opt/hadoop/conf
