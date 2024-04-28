@@ -44,19 +44,28 @@ window_duration = "1 minute"
 slide_interval = "30 seconds"
 
 # Group by symbol and calculate the average price within each window
-window_agg_df = parsed_df \
-    .groupBy(
-        window(col("receipt_timestamp"), window_duration),
-        col("symbol").alias("agg_symbol")
-    ) \
-    .agg(avg("bid").alias("avg_price"))
+# window_agg_df = parsed_df \
+#     .groupBy(
+#         window(col("receipt_timestamp"), window_duration),
+#         col("symbol").alias("agg_symbol")
+#     ) \
+#     .agg(avg("bid").alias("avg_price"))
+
+# joined_df = parsed_df.join(
+#     window_agg_df,
+#     [parsed_df["symbol"] == window_agg_df["agg_symbol"]],
+#     "inner"
+# ).select(parsed_df["*"], window_agg_df["avg_price"])
+window_agg_df = parsed_df.groupBy(
+    window(col("receipt_timestamp"), window_duration, slide_interval),
+    col("symbol")
+).agg(avg("bid").alias("avg_price"))
 
 joined_df = parsed_df.join(
     window_agg_df,
-    [parsed_df["symbol"] == window_agg_df["agg_symbol"]],
-    "inner"
-).select(parsed_df["*"], window_agg_df["avg_price"])
-
+    (parsed_df["symbol"] == window_agg_df["symbol"]) &
+    (parsed_df["receipt_timestamp"].between(window_agg_df["window"].start, window_agg_df["window"].end))
+)
 # Generate buy/sell signals based on the current price and average price
 trading_signals_df = joined_df \
     .withColumn("signal", 
