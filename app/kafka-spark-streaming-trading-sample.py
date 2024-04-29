@@ -58,28 +58,40 @@ slide_interval = "30 seconds"
 # ).select(parsed_df["*"], window_agg_df["avg_price"])
 window_agg_df = parsed_df.groupBy(
     window(col("receipt_timestamp"), window_duration, slide_interval),
-    col("symbol")
+    col("symbol").alias("agg_symbol")  # Rename here
 ).agg(avg("bid").alias("avg_price"))
 
-joined_df = parsed_df.join(
-    window_agg_df,
-    (parsed_df["symbol"] == window_agg_df["symbol"]) &
-    (parsed_df["receipt_timestamp"].between(window_agg_df["window"].start, window_agg_df["window"].end))
+# Use DataFrame alias when performing join
+joined_df = parsed_df.alias("raw").join(
+    window_agg_df.alias("agg"),
+    (col("raw.symbol") == col("agg.agg_symbol")),  # Use aliases in join condition
+    "inner"
+)
+
+# Select columns using aliases to avoid ambiguity
+trading_signals_df = joined_df.select(
+    col("raw.receipt_timestamp"),
+    col("raw.symbol"),
+    col("raw.bid"),
+    col("agg.avg_price"),
+    when(col("raw.bid") > col("agg.avg_price"), "BUY")
+        .when(col("raw.bid") < col("agg.avg_price"), "SELL")
+        .otherwise("HOLD").alias("signal")
 )
 # Generate buy/sell signals based on the current price and average price
-trading_signals_df = joined_df \
-    .withColumn("signal", 
-                when(col("bid") > col("avg_price"), "BUY")
-                .when(col("bid") < col("avg_price"), "SELL")
-                .otherwise("HOLD")
-    ) \
-    .select(
-        "receipt_timestamp",
-        "symbol",
-        "bid",
-        "avg_price",
-        "signal"
-    )
+# trading_signals_df = joined_df \
+#     .withColumn("signal", 
+#                 when(col("bid") > col("avg_price"), "BUY")
+#                 .when(col("bid") < col("avg_price"), "SELL")
+#                 .otherwise("HOLD")
+#     ) \
+#     .select(
+#         "receipt_timestamp",
+#         "symbol",
+#         "bid",
+#         "avg_price",
+#         "signal"
+#     )
 
 # debugQuery = parsed_df.writeStream \
 #     .outputMode("append") \
